@@ -1,0 +1,337 @@
+{
+  "generatedAt": "2026-10-28T08:19:21.420Z",
+  "scope": "Checkout business logic; not browser E2E",
+  "passed": 16,
+  "total": 16,
+  "results": [
+    {
+      "id": "TC01",
+      "name": "Happy path",
+      "group": "Checkout",
+      "input": {
+        "quantity": 1,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": true,
+        "total": 54800
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 49900,
+        "discount": 0,
+        "shipping": 4900,
+        "total": 54800
+      },
+      "passed": true
+    },
+    {
+      "id": "TC02",
+      "name": "SAVE10 gives 10% off",
+      "group": "Discount",
+      "input": {
+        "quantity": 1,
+        "email": "qa@example.com",
+        "coupon": "SAVE10"
+      },
+      "expected": {
+        "ok": true,
+        "discount": 4990,
+        "total": 49810
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 49900,
+        "discount": 4990,
+        "shipping": 4900,
+        "total": 49810
+      },
+      "passed": true
+    },
+    {
+      "id": "TC03",
+      "name": "Coupon ignores case and spaces",
+      "group": "Discount",
+      "input": {
+        "quantity": 2,
+        "email": "qa@example.com",
+        "coupon": " save10 "
+      },
+      "expected": {
+        "ok": true,
+        "discount": 9980,
+        "total": 94720
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 99800,
+        "discount": 9980,
+        "shipping": 4900,
+        "total": 94720
+      },
+      "passed": true
+    },
+    {
+      "id": "TC04",
+      "name": "Empty email rejected",
+      "group": "Validation",
+      "input": {
+        "quantity": 1,
+        "email": ""
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Enter a valid email address."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC05",
+      "name": "Malformed email rejected",
+      "group": "Validation",
+      "input": {
+        "quantity": 1,
+        "email": "qa@"
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Enter a valid email address."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC06",
+      "name": "Zero quantity rejected",
+      "group": "Boundary",
+      "input": {
+        "quantity": 0,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Quantity must be a whole number from 1 to 10."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC07",
+      "name": "Negative quantity rejected",
+      "group": "Boundary",
+      "input": {
+        "quantity": -1,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Quantity must be a whole number from 1 to 10."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC08",
+      "name": "Fractional quantity rejected",
+      "group": "Boundary",
+      "input": {
+        "quantity": 1.5,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Quantity must be a whole number from 1 to 10."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC09",
+      "name": "Upper limit accepted",
+      "group": "Boundary",
+      "input": {
+        "quantity": 10,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": true,
+        "total": 499000
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 499000,
+        "discount": 0,
+        "shipping": 0,
+        "total": 499000
+      },
+      "passed": true
+    },
+    {
+      "id": "TC10",
+      "name": "Above upper limit rejected",
+      "group": "Boundary",
+      "input": {
+        "quantity": 11,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Quantity must be a whole number from 1 to 10."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC11",
+      "name": "Unknown coupon rejected",
+      "group": "Discount",
+      "input": {
+        "quantity": 1,
+        "email": "qa@example.com",
+        "coupon": "FREE"
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Unknown coupon. Try SAVE10."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC12",
+      "name": "Shipping below threshold",
+      "group": "Shipping",
+      "input": {
+        "quantity": 2,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": true,
+        "shipping": 4900,
+        "total": 104700
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 99800,
+        "discount": 0,
+        "shipping": 4900,
+        "total": 104700
+      },
+      "passed": true
+    },
+    {
+      "id": "TC13",
+      "name": "Free shipping above threshold",
+      "group": "Shipping",
+      "input": {
+        "quantity": 3,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": true,
+        "shipping": 0,
+        "total": 149700
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 149700,
+        "discount": 0,
+        "shipping": 0,
+        "total": 149700
+      },
+      "passed": true
+    },
+    {
+      "id": "TC14",
+      "name": "Email whitespace normalized",
+      "group": "Validation",
+      "input": {
+        "quantity": 1,
+        "email": " qa@example.com "
+      },
+      "expected": {
+        "ok": true
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 49900,
+        "discount": 0,
+        "shipping": 4900,
+        "total": 54800
+      },
+      "passed": true
+    },
+    {
+      "id": "TC15",
+      "name": "Non-numeric quantity rejected",
+      "group": "Boundary",
+      "input": {
+        "quantity": null,
+        "email": "qa@example.com"
+      },
+      "expected": {
+        "ok": false
+      },
+      "actual": {
+        "ok": false,
+        "errors": [
+          "Quantity must be a whole number from 1 to 10."
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "TC16",
+      "name": "Discount and free shipping combined",
+      "group": "Shipping",
+      "input": {
+        "quantity": 3,
+        "email": "qa@example.com",
+        "coupon": "SAVE10"
+      },
+      "expected": {
+        "ok": true,
+        "discount": 14970,
+        "shipping": 0,
+        "total": 134730
+      },
+      "actual": {
+        "ok": true,
+        "subtotal": 149700,
+        "discount": 14970,
+        "shipping": 0,
+        "total": 134730
+      },
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"name":"qa-automation-lab","version":"1.0.0","private":true,"type":"module","scripts":{"test":"node --test *.test.mjs","report":"node report.mjs"},"engines":{"node":">=20"}}
